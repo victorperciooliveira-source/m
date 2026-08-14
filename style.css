@@ -7,8 +7,7 @@
 body, html {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    overflow: hidden;
 }
 
 .game-board {
@@ -32,7 +31,7 @@ body, html {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: url('../img/placidplace-drops-13474_256.gif') center / cover no-repeat;
+    background: url('./img/placidplace-drops-13474_256.gif') center / cover no-repeat;
     pointer-events: none;
     z-index: 0;
     opacity: 0.3;
@@ -45,7 +44,6 @@ body, html {
     z-index: 1;
 }
 
-/* Garante que o Yoshi fique bem posicionado se a imagem for diferente */
 .mario[src*="yoshi"] {
     width: 160px;
 }
@@ -55,6 +53,7 @@ body, html {
     bottom: 0;
     width: 80px;
     animation: pipe-animation 1.5s infinite linear;
+    z-index: 1;
 }
 
 .clouds {
@@ -69,8 +68,11 @@ body, html {
     position: absolute;
     top: 20px;
     right: 20px;
-    color: white;
-    font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #000;
+    font-size: 20px;
     font-family: Arial, sans-serif;
     z-index: 2;
 }
@@ -113,7 +115,22 @@ body, html {
     z-index: 100;
 }
 
-.jump { animation: jump 500ms ease-out; }
+#finalScene p {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+#finalVideo {
+    width: 80%;
+    max-width: 600px;
+}
+
+.jump { 
+    animation: jump 500ms ease-out; 
+}
 
 @keyframes pipe-animation {
     from { right: -80px; }
@@ -129,15 +146,4 @@ body, html {
 @keyframes clouds-animation {
     0% { left: 100%; }
     100% { left: -550px; }
-}
-
-.score-board {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-family: Arial, sans-serif;
-    z-index: 2;
 }

@@ -16,7 +16,6 @@ backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
 
 const faseSound = new Audio('./mp3/level-up.mp3');
-
 const yeahooSound = new Audio('./mp3/yeahoo.mp3');
 
 const yoshiSound = new Audio('./mp3/flower-garden-alert.mp3');
@@ -26,7 +25,7 @@ yoshiSound.volume = 0.5;
 let pontos = 0;
 let fase = 1;
 let pontosAtivos = true;
-let hitboxWidth = 120; // Largura padrão de colisão para o Mario sozinho
+let hitboxWidth = 120;
 let gamePaused = false;
 
 // Inicia música clássica no começo
@@ -72,32 +71,26 @@ const ajustarVelocidadeDoCano = () => {
 };
 
 const atualizarPontuacao = () => { 
-
-
     if (!gamePaused && pontosAtivos) {
         pontos++;
         if (pontosDisplay) pontosDisplay.textContent = String(pontos);
 
-        if (pontos % 10=== 0) {
+        if (pontos % 10 === 0) {
             fase++;
             if (faseDisplay) faseDisplay.textContent = String(fase);
         
             if (fase === 100) {
-                // Fase final: cena com vídeo - PAUSE GERAL
                 pontosAtivos = false;
                 gamePaused = true;
                 
-                // Pausar tudo
                 pipe.style.display = 'none';
                 pipe.style.animationPlayState = 'paused';
                 clouds.style.animationPlayState = 'paused';
                 mario.style.animationPlayState = 'paused';
                 
-                // Pausar sons
                 backgroundMusic.pause();
                 yoshiSound.pause();
                 
-                // Limpar loop de colisão
                 clearInterval(loop);
                 
                 const finalScene = document.getElementById('finalScene');
@@ -106,48 +99,39 @@ const atualizarPontuacao = () => {
                 finalScene.style.display = 'flex';
                 finalVideo.play();
                 
-                // Ativar tela cheia
                 if (finalVideo.requestFullscreen) {
                     finalVideo.requestFullscreen().catch(err => console.log('Fullscreen não disponível:', err));
                 }
                 
-                // Quando o vídeo terminar, volta para start
                 finalVideo.addEventListener('ended', () => {
                     window.location.href = 'start.html';
                 });
                 
-                return; // Não continua para as outras lógicas
+                return;
             }
 
-            // --- LÓGICA DE TRANSIÇÃO DE FASES ---
             if (fase === 2) {
-                // Entra Yoshi, troca música e aumenta hitbox
                 mario.src = './img/super-mario-world-yoshi.gif';
                 mario.style.width = '150px';
-                hitboxWidth = 150; // Ajuste para o Yoshi
+                hitboxWidth = 150;
                 
-                // Não pausa backgroundMusic, abaixa volume e toca yoshiSound
                 backgroundMusic.volume = 0.1; 
                 yoshiSound.currentTime = 0;
                 yoshiSound.play().catch(() => {});
             } 
             else if (fase >= 3 && fase < 7) {
-                // Fase 3 a 6: Entram Mario e Luigi juntos e aumenta hitbox
                 mario.src = './img/super-mario-world-yoshi.gif'; 
                 mario.style.width = '180px'; 
-                hitboxWidth = 170; // Ajuste para a dupla (mais largo)
+                hitboxWidth = 170;
                 
-                // Volta volume normal do backgroundMusic e pausa yoshiSound
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
             else if (fase === 7) {
-                // Fase 7: Volta ao Mario normal
-                mario.src = './img/mario.gif'; // Assumindo a imagem normal do Mario
+                mario.src = './img/mario.gif';
                 mario.style.width = '150px';
-                hitboxWidth = 120; // Volta ao padrão
+                hitboxWidth = 120;
                 
-                // Volta volume normal e pausa yoshiSound
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
@@ -176,7 +160,6 @@ const loop = setInterval(() => {
     const pipePosition = pipe.offsetLeft;
     const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
 
-    // Verifica colisão usando o hitboxWidth dinâmico
     if (pipePosition <= hitboxWidth && pipePosition > 0 && marioPosition < 80) {
         pontosAtivos = false;
         
