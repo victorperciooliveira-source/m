@@ -9,6 +9,7 @@ const faseDisplay = document.getElementById('fase');
 // Sons
 const jumpSound = new Audio('./mp3/maro-jump-sound-effect_1.mp3');
 jumpSound.volume = 0.1; 
+
 const gameOverSound = new Audio('./mp3/super-mario-death-sound-sound-effect.mp3');
 
 const backgroundMusic = new Audio('./mp3/mario_bros.mp3');
@@ -25,7 +26,6 @@ yoshiSound.volume = 0.5;
 let pontos = 0;
 let fase = 1;
 let pontosAtivos = true;
-let hitboxWidth = 120;
 let gamePaused = false;
 let scoreTimeoutId = null;
 
@@ -65,12 +65,11 @@ const atualizarClima = () => {
     }
 };
 
-// Velocidade equilibrada do cano (2.0s na Fase 1 até 0.9s na Fase 10)
+// Velocidade do cano
 const ajustarVelocidadeDoCano = () => {
     const novaDuracao = Math.max(0.9, 2.0 - (fase - 1) * 0.12);
     pipe.style.animation = 'none';
-    pipe.style.right = '-80px';
-    void pipe.offsetWidth; // Força reinício da animação CSS
+    void pipe.offsetWidth; // Força reflow para reiniciar animação CSS
     pipe.style.animation = `pipe-animation ${novaDuracao}s infinite linear`;
 };
 
@@ -88,17 +87,15 @@ const atualizarPontuacao = () => {
             if (fase === 10) {
                 pontosAtivos = false;
                 gamePaused = true;
+                clearTimeout(scoreTimeoutId);
+                clearInterval(loop);
                 
                 pipe.style.display = 'none';
-                pipe.style.animationPlayState = 'paused';
                 clouds.style.animationPlayState = 'paused';
                 mario.style.animationPlayState = 'paused';
                 
                 backgroundMusic.pause();
                 yoshiSound.pause();
-                
-                clearInterval(loop);
-                clearTimeout(scoreTimeoutId);
                 
                 const finalScene = document.getElementById('finalScene');
                 const finalVideo = document.getElementById('finalVideo');
@@ -122,7 +119,6 @@ const atualizarPontuacao = () => {
             if (fase === 2) {
                 mario.src = './img/super-mario-world-yoshi.gif';
                 mario.style.width = '150px';
-                hitboxWidth = 150;
                 backgroundMusic.volume = 0.1; 
                 yoshiSound.currentTime = 0;
                 yoshiSound.play().catch(() => {});
@@ -130,14 +126,12 @@ const atualizarPontuacao = () => {
             else if (fase >= 3 && fase < 7) {
                 mario.src = './img/super-mario-world-yoshi.gif'; 
                 mario.style.width = '180px'; 
-                hitboxWidth = 170;
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
             else if (fase >= 7) {
                 mario.src = './img/mario.gif';
                 mario.style.width = '150px';
-                hitboxWidth = 120;
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
@@ -164,12 +158,15 @@ const atualizarPontuacao = () => {
 // Iniciar a pontuação
 atualizarPontuacao();
 
-// Loop de detecção de colisão
+// Loop de detecção de colisão corrigido
 const loop = setInterval(() => {
     const pipePosition = pipe.offsetLeft;
     const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+    const marioLeft = mario.offsetLeft;
+    const marioWidth = mario.offsetWidth;
 
-    if (pipePosition <= hitboxWidth && pipePosition > 0 && marioPosition < 80) {
+    // Colisão precisa considerando a posição relativa do cano e do Mario
+    if (pipePosition <= (marioLeft + marioWidth - 30) && pipePosition + 80 >= marioLeft && marioPosition < 80) {
         pontosAtivos = false;
         gamePaused = true;
         clearTimeout(scoreTimeoutId);
