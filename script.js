@@ -158,19 +158,21 @@ const atualizarPontuacao = () => {
 // Iniciar a pontuação
 atualizarPontuacao();
 
-// Loop de detecção de colisão corrigido
+// Loop de detecção de colisão usando o retângulo real dos elementos
 const loop = setInterval(() => {
     const pipePosition = pipe.offsetLeft;
     const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
-    const marioLeft = mario.offsetLeft;
-    const marioWidth = mario.offsetWidth;
+    const marioRect = mario.getBoundingClientRect();
+    const pipeRect = pipe.getBoundingClientRect();
 
-    // Colisão precisa considerando a posição relativa do cano e do Mario
-    if (pipePosition <= (marioLeft + marioWidth - 30) && pipePosition + 80 >= marioLeft && marioPosition < 80) {
+    const overlapX = marioRect.right > pipeRect.left + 12 && marioRect.left < pipeRect.right - 12;
+    const overlapY = marioRect.bottom > pipeRect.top + 12 && marioRect.top < pipeRect.bottom - 12;
+
+    if (overlapX && overlapY) {
         pontosAtivos = false;
         gamePaused = true;
         clearTimeout(scoreTimeoutId);
-        
+
         pipe.style.animation = 'none';
         pipe.style.left = `${pipePosition}px`;
 
@@ -181,7 +183,7 @@ const loop = setInterval(() => {
         mario.style.marginLeft = '50px';
 
         clearInterval(loop);
-        
+
         backgroundMusic.pause();
         yoshiSound.pause();
         gameOverSound.play().catch(() => {});
