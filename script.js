@@ -67,7 +67,7 @@ const atualizarClima = () => {
 
 // Velocidade do cano
 const ajustarVelocidadeDoCano = () => {
-    const novaDuracao = Math.max(0.9, 2.0 - (fase - 1) * 0.12);
+    const novaDuracao = Math.max(1.4, 2.9 - (fase - 1) * 0.15);
     pipe.style.animation = 'none';
     void pipe.offsetWidth; // Força reflow para reiniciar animação CSS
     pipe.style.animation = `pipe-animation ${novaDuracao}s infinite linear`;
