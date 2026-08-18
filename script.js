@@ -40,7 +40,10 @@ document.addEventListener('click', iniciarMusica);
 
 // Pulo
 const jump = (event) => {
-    if (event.type === 'keydown' && event.code !== 'Space' && event.code !== 'ArrowUp') return;
+    const isKeyboardJump = event.type === 'keydown' && (event.code === 'Space' || event.code === 'ArrowUp');
+    const isTapJump = event.type === 'pointerdown' || event.type === 'touchstart' || event.type === 'click';
+
+    if (!isKeyboardJump && !isTapJump) return;
     if (!pontosAtivos || gamePaused) return;
 
     if (!mario.classList.contains('jump')) {
@@ -51,6 +54,8 @@ const jump = (event) => {
     }
 };
 document.addEventListener('keydown', jump);
+document.addEventListener('pointerdown', jump);
+document.addEventListener('touchstart', jump, { passive: true });
 
 // Clima por fase
 const atualizarClima = () => {
