@@ -29,7 +29,7 @@ let hitboxWidth = 120;
 let gamePaused = false;
 let scoreTimeoutId = null;
 
-// Inicia música no clique/tecla
+// Ativar áudio no primeiro clique ou tecla
 const iniciarMusica = () => {
     backgroundMusic.play().catch(() => {});
     document.removeEventListener('keydown', iniciarMusica);
@@ -52,7 +52,7 @@ const jump = (event) => {
 };
 document.addEventListener('keydown', jump);
 
-// Clima dinâmico por fase
+// Clima por fase
 const atualizarClima = () => {
     gameBoard.classList.remove('day', 'night', 'rainy', 'cloudy');
     if (fase >= 4 && fase <= 6) {
@@ -65,28 +65,26 @@ const atualizarClima = () => {
     }
 };
 
-// Ajuste de velocidade do cano para 10 fases
+// Velocidade equilibrada do cano (2.0s na Fase 1 até 0.9s na Fase 10)
 const ajustarVelocidadeDoCano = () => {
-    // Escala de 1.8s (fase 1) até 0.4s (fase 10)
-    const novaDuracao = Math.max(0.4, 1.8 - (fase - 1) * 0.15);
+    const novaDuracao = Math.max(0.9, 2.0 - (fase - 1) * 0.12);
     pipe.style.animation = 'none';
     pipe.style.right = '-80px';
-    void pipe.offsetWidth; // Reflow
+    void pipe.offsetWidth; // Força reinício da animação CSS
     pipe.style.animation = `pipe-animation ${novaDuracao}s infinite linear`;
 };
 
-// Atualização de pontos e fases
+// Lógica de pontuação e transição de fase
 const atualizarPontuacao = () => { 
     if (!gamePaused && pontosAtivos) {
         pontos++;
         if (pontosDisplay) pontosDisplay.textContent = String(pontos);
 
-        // A cada 100 pontos sobe de fase
         if (pontos % 100 === 0) {
             fase++;
             if (faseDisplay) faseDisplay.textContent = String(fase);
 
-            // Condição de Vitória ao chegar na Fase 10
+            // Vitória ao atingir a Fase 10
             if (fase === 10) {
                 pontosAtivos = false;
                 gamePaused = true;
@@ -110,22 +108,21 @@ const atualizarPontuacao = () => {
                     finalVideo.play().catch(() => {});
                     
                     if (finalVideo.requestFullscreen) {
-                        finalVideo.requestFullscreen().catch(err => console.log('Fullscreen não disponível:', err));
+                        finalVideo.requestFullscreen().catch(() => {});
                     }
                     
                     finalVideo.addEventListener('ended', () => {
-                        window.location.href = 'start.html';
+                        window.location.reload();
                     });
                 }
                 return;
             }
 
-            // Mudar sprite do Mario conforme a fase
+            // Mudar sprite conforme a fase
             if (fase === 2) {
                 mario.src = './img/super-mario-world-yoshi.gif';
                 mario.style.width = '150px';
                 hitboxWidth = 150;
-                
                 backgroundMusic.volume = 0.1; 
                 yoshiSound.currentTime = 0;
                 yoshiSound.play().catch(() => {});
@@ -134,7 +131,6 @@ const atualizarPontuacao = () => {
                 mario.src = './img/super-mario-world-yoshi.gif'; 
                 mario.style.width = '180px'; 
                 hitboxWidth = 170;
-                
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
@@ -142,7 +138,6 @@ const atualizarPontuacao = () => {
                 mario.src = './img/mario.gif';
                 mario.style.width = '150px';
                 hitboxWidth = 120;
-                
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
@@ -162,14 +157,14 @@ const atualizarPontuacao = () => {
     }
 
     if (pontosAtivos && !gamePaused) {
-        const novaVelocidade = Math.max(10, 80 - (fase - 1) * 7);
-        scoreTimeoutId = setTimeout(atualizarPontuacao, novaVelocidade);
+        scoreTimeoutId = setTimeout(atualizarPontuacao, 120);
     }
 };
 
+// Iniciar a pontuação
 atualizarPontuacao();
 
-// Loop de Colisão
+// Loop de detecção de colisão
 const loop = setInterval(() => {
     const pipePosition = pipe.offsetLeft;
     const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
@@ -198,6 +193,7 @@ const loop = setInterval(() => {
     }
 }, 10);
 
+// Botão reiniciar
 if (restartButton) {
-    restartButton.addEventListener('click', () => window.location.href = 'start.html');
+    restartButton.addEventListener('click', () => window.location.reload());
 }
