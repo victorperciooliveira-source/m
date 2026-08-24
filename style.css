@@ -55,14 +55,6 @@ body, html {
     width: 50px;
 }
 
-.luigi {
-    width: 150px;
-    position: absolute;
-    bottom: 0;
-    left: 50px;
-    z-index: 1;
-}
- 
 .pipe {
     position: absolute;
     bottom: 0;

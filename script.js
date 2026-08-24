@@ -5,7 +5,6 @@ const gameBoard = document.getElementById('gameBoard');
 const restartButton = document.getElementById('restartButton');
 const pontosDisplay = document.getElementById('pontos');
 const faseDisplay = document.getElementById('fase');
-const luigi = document.querySelector ('.luigi');
 
 // Sons
 const jumpSound = new Audio('./mp3/maro-jump-sound-effect_1.mp3');
@@ -74,7 +73,7 @@ const atualizarClima = () => {
 
 // Velocidade do cano
 const ajustarVelocidadeDoCano = () => {
-    const novaDuracao = Math.max(1.4, 2.9 - (fase - 1) * 0.15);
+    const novaDuracao = Math.max(1.05, 1.5 - (fase - 1) * 0.06);
     pipe.style.animation = 'none';
     void pipe.offsetWidth; // Força reflow para reiniciar animação CSS
     pipe.style.animation = `pipe-animation ${novaDuracao}s infinite linear`;
