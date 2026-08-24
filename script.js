@@ -5,6 +5,7 @@ const gameBoard = document.getElementById('gameBoard');
 const restartButton = document.getElementById('restartButton');
 const pontosDisplay = document.getElementById('pontos');
 const faseDisplay = document.getElementById('fase');
+const luigi = document.querySelector ('.luigi');
 
 // Sons
 const jumpSound = new Audio('./mp3/maro-jump-sound-effect_1.mp3');
@@ -137,6 +138,13 @@ const atualizarPontuacao = () => {
             else if (fase >= 7) {
                 mario.src = './img/mario.gif';
                 mario.style.width = '150px';
+                backgroundMusic.volume = 0.5;
+                yoshiSound.pause(); 
+            }
+
+             else if (fase >= 8) {
+                mario.src = ',/img/luigi_running_by_win1945_dfk55sp.gif';
+                mario.style.width = '50px';
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
