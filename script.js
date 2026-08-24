@@ -131,7 +131,7 @@ const atualizarPontuacao = () => {
             } 
             else if (fase >= 3 && fase < 7) {
                 mario.src = './img/super-mario-world-yoshi.gif'; 
-                mario.style.width = '180px'; 
+                mario.style.width = '130px'; 
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
@@ -177,8 +177,21 @@ const loop = setInterval(() => {
     const marioRect = mario.getBoundingClientRect();
     const pipeRect = pipe.getBoundingClientRect();
 
-    const overlapX = marioRect.right > pipeRect.left + 12 && marioRect.left < pipeRect.right - 12;
-    const overlapY = marioRect.bottom > pipeRect.top + 12 && marioRect.top < pipeRect.bottom - 12;
+    const marioHitbox = {
+        left: marioRect.left + marioRect.width * 0.28,
+        right: marioRect.right - marioRect.width * 0.28,
+        top: marioRect.top + marioRect.height * 0.16,
+        bottom: marioRect.bottom - marioRect.height * 0.06
+    };
+    const pipeHitbox = {
+        left: pipeRect.left + pipeRect.width * 0.16,
+        right: pipeRect.right - pipeRect.width * 0.16,
+        top: pipeRect.top + pipeRect.height * 0.08,
+        bottom: pipeRect.bottom
+    };
+
+    const overlapX = marioHitbox.right > pipeHitbox.left && marioHitbox.left < pipeHitbox.right;
+    const overlapY = marioHitbox.bottom > pipeHitbox.top && marioHitbox.top < pipeHitbox.bottom;
 
     if (overlapX && overlapY) {
         pontosAtivos = false;
