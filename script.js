@@ -85,7 +85,7 @@ const atualizarPontuacao = () => {
         pontos++;
         if (pontosDisplay) pontosDisplay.textContent = String(pontos);
 
-        if (pontos % 100 === 0) {
+        if (pontos % 10 === 0) {
             fase++;
             if (faseDisplay) faseDisplay.textContent = String(fase);
 
