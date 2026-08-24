@@ -52,7 +52,7 @@ body, html {
 }
 
 .mario[src*="yoshi"] {
-    width: 50px;
+    width: 20px;
 }
 
 .pipe {
@@ -165,11 +165,11 @@ body, html {
     }
 
     .mario[src*="yoshi"] {
-        width: 120px;
+        width: 30px;
     }
 
     .pipe {
-        width: 52px;
+        width: 20px;
     }
 
     .clouds {
@@ -212,11 +212,11 @@ body, html {
     }
 
     .mario[src*="yoshi"] {
-        width: 102px;
+        width: 30px;
     }
 
     .pipe {
-        width: 44px;
+        width: 20px;
     }
 
     .score-board {
