@@ -143,7 +143,7 @@ const atualizarPontuacao = () => {
             }
             else if (fase >= 8) {
                 mario.src = './img/luigi_running_by_win1945_dfk55sp.gif';
-                mario.style.width = '50px';
+                mario.style.width = '100px';
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
