@@ -29,6 +29,7 @@ let fase = 1;
 let pontosAtivos = true;
 let gamePaused = false;
 let scoreTimeoutId = null;
+const intervaloPontuacao = 60;
 
 // Ativar áudio no primeiro clique ou tecla
 const iniciarMusica = () => {
@@ -135,15 +136,14 @@ const atualizarPontuacao = () => {
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
-            else if (fase >= 7) {
+            else if (fase >= 7 && fase < 8) {
                 mario.src = './img/mario.gif';
                 mario.style.width = '150px';
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
             }
-
-             else if (fase >= 8) {
-                mario.src = ',/img/luigi_running_by_win1945_dfk55sp.gif';
+            else if (fase >= 8) {
+                mario.src = './img/luigi_running_by_win1945_dfk55sp.gif';
                 mario.style.width = '50px';
                 backgroundMusic.volume = 0.5;
                 yoshiSound.pause(); 
@@ -164,7 +164,7 @@ const atualizarPontuacao = () => {
     }
 
     if (pontosAtivos && !gamePaused) {
-        scoreTimeoutId = setTimeout(atualizarPontuacao, 120);
+        scoreTimeoutId = setTimeout(atualizarPontuacao, intervaloPontuacao);
     }
 };
 
